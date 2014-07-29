@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Gallery</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <header class="header">
+            <span>Gallery</span>
+            <span>Items: {{count}}/{{total}}</span>
+            <span>Selected:{{src}}</span>
+            <span>
+                <form class="header-form">
+                    <input type="text" name="search">
+                    <button>search</button>
+                </form>
+            </span>
+            <span>
+                <button></button>
+                <button></button>
+            </span>
+        </header>
+
+        <div id="gl">
+            <ul id="item-list">
+
+            </ul>
+        </div>
+
+        <footer>Gallery Footer</footer>
+
+        <script type="text/javascript" src="main.js"></script>
+    </body>
+
+</html>

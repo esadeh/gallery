@@ -1,0 +1,62 @@
+.gl-item {
+    width: 200px;
+    margin: 0 2px 2px 0;
+    border: 1px solid black;
+    padding: 8px;
+
+}
+.gallery-images {
+
+}
+
+.gl-item-footer {
+    background-color: #B8B8B8;
+    visibility: hidden;
+}
+.gl-item-content:hover{
+    box-shadow: 0px 0px 5px #000;
+    cursor: pointer;
+}
+.gl-item:hover .gl-item-footer{
+    visibility: visible;
+}
+
+.gl-item-footer-btn {
+    width: 98px;
+    cursor: pointer;
+    margin-right: 1px;
+
+}
+
+.header-form{
+    display: inline;
+}
+
+.gl-item-content {
+    height: 142px
+}
+
+li {
+    margin: 0;
+    list-style-type: none;
+    display: inline-block;
+}
+ul {
+    padding: 0;
+    margin: 0 auto;
+    text-align: center;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.header{
+    background-color: #bdbdbd;
+    margin: 0 0 5px 0;
+    padding: 2px 0 ;
+
+}
+.header > * {
+    margin: 0 4%;
+    padding: 2px 0 ;
+}
+
