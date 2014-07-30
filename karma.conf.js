@@ -3,7 +3,7 @@
 
 module.exports = function (config) {
   config.set({
-    plugins: ['karma-jasmine', 'karma-phantomjs-launcher'],
+    plugins: ['karma-jasmine', 'karma-phantomjs-launcher', 'karma-chrome-launcher'],
 
     // base path, that will be used to resolve files and exclude
     basePath: '',
@@ -59,7 +59,7 @@ module.exports = function (config) {
     // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
-    browsers: ['PhantomJS'],
+    browsers: ['Chrome'],
 
 
     // If browser does not capture in given timeout [ms], kill it

@@ -1,4 +1,5 @@
-function gallery() {
+function Gallery() {
+    var Gallery = {};
 
     var ulItems = document.getElementById('item-list')
     var itemId = 0;
@@ -20,7 +21,7 @@ function gallery() {
     }
 
 
-    function appendGlItem(url, title, alt) {
+    Gallery.appendGalleryItem = function (url, title, alt) {
         var item = document.createElement('li');
         item.id = itemId;
         itemId++;
@@ -58,17 +59,21 @@ function gallery() {
 
     }
 
-    return{
-        appendGlItem : appendGlItem
-    }
+    return Gallery;
 }
-var gl = new gallery();
-gl.appendGlItem('http://dummyimage.com/200X142/822c00/fff.png', 'a', 'Image');
-gl.appendGlItem('http://dummyimage.com/200X142/822c00/fff.png', 'b', 'Image');
-gl.appendGlItem('http://dummyimage.com/200X142/822c00/fff.png', 'c', 'Image');
-gl.appendGlItem('http://dummyimage.com/200X142/822c00/fff.png', 'd', 'Image');
-gl.appendGlItem('http://dummyimage.com/200X142/822c00/fff.png', 'e', 'Image');
-gl.appendGlItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
+var gl = new Gallery();
+gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'a', 'Image');
+gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'b', 'Image');
+gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'c', 'Image');
+gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'd', 'Image');
+gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'e', 'Image');
+gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
+gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
+gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
+gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
+gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
+gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
+gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
 
 ////<li>
 ////    <div class="gl-item">
