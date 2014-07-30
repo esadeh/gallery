@@ -3,7 +3,7 @@
  */
 describe("JDom", function() {
     beforeEach(function () {
-        document.body.innerHTML = '<div>Test</div><div>Test2</div>';
+        document.body.innerHTML = '<div>Test</div><div>Test2</div><button></button>';
     });
 
     it("should generate collection with 2 items", function () {
@@ -53,7 +53,7 @@ describe("JDom", function() {
 
     it("should clone collection", function () {
         var collection = $('div');
-        var collection2 = collection.clone();
+        var collection2 = collection.clone(true);
         expect(collection2.nodes[0].element.innerHTML).toEqual(collection.nodes[0].element.innerHTML);
         collection.addClass('aaa');
         expect(collection2.hasClass('aaa')).toBeFalsy();
@@ -78,6 +78,23 @@ describe("JDom", function() {
         expect(collection.html(html).html()).toEqual(html);
 
     });
+
+    it("should set and return content when using function text", function () {
+        var collection = $('div');
+        expect(collection.text()).toEqual('Test');
+
+        expect(collection.text('T').text()).toEqual('T');
+
+    });
+
+    it("should remove all elements in the collection from the dom", function () {
+        var collection = $('div');
+        collection.remove();
+        var collection = $('div');
+        expect(collection.size()).toEqual(0);
+    });
+
+
 
 });
 

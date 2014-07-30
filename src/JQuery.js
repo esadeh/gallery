@@ -39,8 +39,8 @@ function jDom(context, exports) {
         return this.element.hasAttribute(key);
     };
 
-    jDomItem.prototype.clone = function () {
-        var element = this.element.cloneNode(true)
+    jDomItem.prototype.clone = function (deep) {
+        var element = this.element.cloneNode(deep)
         return new jDomItem(element);
     };
 
@@ -60,6 +60,21 @@ function jDom(context, exports) {
         return this.element.innerHTML;
     };
 
+    jDomItem.prototype.text = function (text) {
+        if (text !== undefined){
+            this.element.textContent = text;
+            return this;
+        }
+        return this.element.textContent;
+    };
+
+
+
+    jDomItem.prototype.remove = function () {
+        if (this.element) {
+            this.element.parentNode.removeChild(this.element);
+        }
+    };
 
 
     //////////////////////////////////////////////////////////////////////
@@ -113,8 +128,9 @@ function jDom(context, exports) {
         return this.nodes.length;
     };
 
-    jDOMCollection.prototype.clone = function(){
-        return  this.map(jDomItem.prototype.clone);
+    jDOMCollection.prototype.clone = function(deep){
+        return  this.map(function(item){
+            return item.clone(deep)});
     };
 
 
@@ -135,6 +151,21 @@ function jDom(context, exports) {
         }
         return this.nodes[0].html();
     };
+
+
+    jDOMCollection.prototype.text = function(text){
+        if (text !== undefined){
+            return this.each(function(){
+                this.text(text);
+            })
+        }
+        return this.nodes[0].text();
+    };
+
+    jDOMCollection.prototype.remove = function(){
+        return  this.each(jDomItem.prototype.remove);
+    };
+
 
 
     jDOMCollection.prototype.each = function (func) {
