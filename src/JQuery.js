@@ -69,18 +69,74 @@ function jDom(context, exports) {
     };
 
 
+    jDomItem.prototype.append = function (content) {
+        if (typeof content === 'string' ){
+            this.element.innerHTML += content;
+        }
+        else if(content instanceof Element){
+            this.element.appendChild(content.cloneNode(true));
+        }
+        return this;
+    };
+
+
+    function insertBefore(element, content) {
+        element.parentNode.insertBefore(content, element);
+    }
+
+    jDomItem.prototype.before = function (content) {
+        if (typeof content === 'string' ){
+            var div = document.createElement('div');
+            div.innerHTML = content;
+            while(div.firstChild){
+                insertBefore(this.element, div.firstChild);
+            }
+        }
+        else if(content instanceof Element){
+            insertBefore(this.element, content.cloneNode(true));
+        }
+        return this;
+    };
+
+    function insertAfter(element, content) {
+        element.parentNode.insertBefore(content, element.nextSibling);
+    }
+    jDomItem.prototype.after = function (content) {
+        if (typeof content === 'string' ){
+            var div = document.createElement('div');
+            div.innerHTML = content;
+            while(div.firstChild){
+                insertAfter(this.element, div.firstChild);
+            }
+        }
+        else if(content instanceof Element){
+            insertAfter(this.element, content.cloneNode(true));
+        }
+        return this;
+    };
+
+
 
     jDomItem.prototype.remove = function () {
         if (this.element) {
             this.element.parentNode.removeChild(this.element);
         }
+        return this;
+    };
+
+    jDomItem.prototype.empty = function () {
+        var myNode = this.element;
+        while (myNode.firstChild) {
+            myNode.removeChild(myNode.firstChild);
+        }
+        return this;
     };
 
 
     //////////////////////////////////////////////////////////////////////
 
     function jDOMCollection(jDomItems) {
-        this.nodes = jDomItems;
+        this.nodes = jDomItems||[];
     }
     jDOMCollection.prototype.addClass = function(className){
         return this.each(function(){
@@ -102,8 +158,9 @@ function jDom(context, exports) {
     };
 
     jDOMCollection.prototype.toggleClass = function(className){
-        this.nodes[0].toggleClass(className);
-        return this;
+        return this.each(function(item){
+            item.toggleClass(className);
+        })
     };
 
 
@@ -167,6 +224,82 @@ function jDom(context, exports) {
     };
 
 
+    jDOMCollection.prototype.empty = function(){
+        return  this.each(jDomItem.prototype.empty);
+    };
+
+    jDOMCollection.prototype.eq = function(index){
+        if (this.nodes[index]) {
+            var newArr = [this.nodes[index]];
+            return new jDOMCollection(newArr);
+        }
+        return new jDOMCollection([]);
+    };
+
+    jDOMCollection.prototype.append = function(content){
+        return this.each(function(item){
+            item.append(content);
+        });
+    };
+
+
+    jDOMCollection.prototype.before = function(content){
+        return this.each(function(item){
+            item.before(content);
+        });
+    };
+
+    jDOMCollection.prototype.after = function(content){
+        return this.each(function(item){
+            item.after(content);
+        });
+    };
+
+
+    jDOMCollection.prototype.css = function(key, value){
+        return this.each(function(item){
+            item.element.style[key] = value;
+        });
+    };
+
+    jDOMCollection.prototype.children = function(){
+        var arr = this.nodes.reduce(function(previousValue, currentValue){
+            return previousValue.concat($.nodeListToArrayOfjDomItems(currentValue.element.children));
+        },[]);
+        return new jDOMCollection(arr);
+    };
+
+
+//    jDOMCollection.prototype.siblings = function(){
+//        var arr = this.nodes.reduce(function(previousValue, currentValue){
+//            return previousValue.concat($.nodeListToArrayOfjDomItems(currentValue.element.siblings));
+//        },[]);
+//        return new jDOMCollection(arr);
+//    };
+
+    jDOMCollection.prototype.next = function(){
+        var arr = this.nodes.reduce(function(previousValue, currentValue){
+            if (currentValue.element.nextSibling)
+            {
+                previousValue = previousValue.concat(new jDomItem(currentValue.element.nextSibling))
+            }
+            return previousValue;
+        },[]);
+        return new jDOMCollection(arr);
+    };
+
+
+    jDOMCollection.prototype.prev = function(){
+        var arr = this.nodes.reduce(function(previousValue, currentValue){
+            if (currentValue.element.previousSibling)
+            {
+                previousValue = previousValue.concat(new jDomItem(currentValue.element.previousSibling))
+            }
+            return previousValue;
+        },[]);
+        return new jDOMCollection(arr);
+    };
+
 
     jDOMCollection.prototype.each = function (func) {
         this.nodes.forEach(function(item, i, arr){
@@ -192,7 +325,10 @@ function jDom(context, exports) {
         if (typeof selectorOrNode === 'string') {
             var nlist = root.querySelectorAll(selectorOrNode);
             return new jDOMCollection($.nodeListToArrayOfjDomItems(nlist));
-        } else {
+        }
+        else if(selectorOrNode instanceof Element) {
+            return new jDOMCollection([new jDomItem(selectorOrNode)]);
+        } else{
             throw new Error('TODO: implement more modes');
         }
     }

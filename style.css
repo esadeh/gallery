@@ -1,16 +1,27 @@
 .gl-item {
-    width: 200px;
-    margin: 0 2px 2px 0;
-    border: 1px solid black;
+    margin: 0 2px 5px 0;
+    border: 1px solid rgba(114, 114, 114, 0.71);
+    border-radius: 2px;;
     padding: 8px;
+    min-height: 351px;
+}
 
+.grid{
+    width: 200px;
+}
+
+body {
+    background-image: url('http://1.bp.blogspot.com/-hrGFLyJba3U/Uh90QVFp01I/AAAAAAAAFoY/F5R7LBbTox0/s1600/Background-Picture-Html.jpg');
 }
 .gallery-images {
+    width:200px; /* you can use % */
+    height: auto;
 
 }
 
 .gl-item-footer {
-    background-color: #B8B8B8;
+    background-color: #525252;
+    border-radius: 4px;
     visibility: hidden;
 }
 .gl-item-content:hover{
@@ -27,36 +38,79 @@
     margin-right: 1px;
 
 }
+.gl-item-header{
+    color: #B8B8B8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 .header-form{
     display: inline;
 }
 
 .gl-item-content {
-    height: 142px
+    /*height: 142px*/
 }
 
 li {
     margin: 0;
     list-style-type: none;
     display: inline-block;
-
-
+    vertical-align: top;
 }
 ul {
-    padding: 0;
-    margin: 0 auto;
+    padding: 50px 0 0 0;
+    margin: 0px auto;
     text-align: center;
+    min-height: 900px;
 }
 
 .header{
-    background-color: #bdbdbd;
+    background-color: rgba(189, 189, 189,0.9);
     margin: 0 0 5px 0;
-    padding: 2px 0 ;
-
+    padding: 5px 0 5px 0;
+    position: fixed;
+    width: 100%;
+    box-shadow: 0 0 9px 8px rgba(0,0,0,0.5);
+    overflow: hidden;
 }
 .header > * {
-    margin: 0 4%;
+    margin: 0 6%;
     padding: 2px 0 ;
+}
+
+#count{
+    width: 40px;
+}
+
+.button {
+    padding: 6px 6px 4px 6px;
+    border-radius: 3px;
+    border: 0;
+    background: rgba(255,255,255,0.9);
+}
+
+.header-title{
+    font-family: 'Lobster', cursive;
+    font-size: 28px;
+}
+
+.centered-img{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-left: -250px;
+    margin-top: -362px;
+    width: 500px;
+    height: 723px;
+    /*transition: width 1s, height 1s, background-color 2s, transform 2s;;*/
+
+}
+
+footer{
+    color: #ffffff;
+    text-align: center;
+    font-size: 20px;
 }
 

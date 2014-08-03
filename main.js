@@ -1,15 +1,18 @@
-function Gallery() {
+function App() {
     var Gallery = {};
 
     var ulItems = document.getElementById('item-list')
     var itemId = 0;
+    var cardsArr;
+    var startIndex;
 
-    function createButton(title, className, onClickFunc, fatherId) {
+    function createButton(title, className, onClickFuncId, fatherId) {
         var button = document.createElement('button');
         button.className = className;
         button.setAttribute('type', 'button');
         button.textContent = title;
-        button.onclick = onClickFunc;
+        button.dataset.funcId = onClickFuncId;
+
         button.dataset.fatherId = fatherId;
         return button;
     }
@@ -25,7 +28,7 @@ function Gallery() {
         var item = document.createElement('li');
         item.id = itemId;
         itemId++;
-        var divItem = createDiv('gl-item');
+        var divItem = createDiv('gl-item grid');
         item.appendChild(divItem);
         var divHeader = createDiv('gl-item-header');
 
@@ -37,14 +40,21 @@ function Gallery() {
         divItem.appendChild(divContent);
         divItem.appendChild(divFooter);
         divHeader.textContent = title;
+        divHeader.setAttribute('title', title);
         var img = new Image();
+        img.dataset.funcId = 'center';
+
         img.className = 'gallery-images';
         img.setAttribute('alt', alt);
         divContent.appendChild(img);
+        img.onerror = function(){
+            this.setAttribute('src','http://static.tvtropes.org/pmwiki/pub/images/MagicCardBack.jpg')
+            this.style['border-radius'] = '13px';
+        }
         img.setAttribute('src', url);
-        var buttonRemove = createButton('Remove', 'gl-item-footer-btn', removeButton, item.id);
+        var buttonRemove = createButton('Remove', 'gl-item-footer-btn', 'remove', item.id);
 
-        var buttonEdit = createButton('Edit', 'gl-item-footer-btn', item.id);
+        var buttonEdit = createButton('Edit', 'gl-item-footer-btn', 'edit', item.id);
 
         divFooter.appendChild(buttonRemove);
         divFooter.appendChild(buttonEdit);
@@ -52,40 +62,132 @@ function Gallery() {
         ulItems.appendChild(item);
         return item;
     }
+    var functions = {
+        remove : removeButton,
+        edit : editButton,
+        search : makeRequest,
+        grid : grid,
+        lines : list,
+        center : centerImg
+    }
+    var centered= null;
+    function centerImg(event){
+        if (centered != null){
+            centered.classList.remove('centered-img');
+        }
+        if (centered!=event.target)
+            event.target.classList.add('centered-img');
+
+        centered=event.target;
+    }
+    function grid(){
+        $('li').css('display', 'inline-block');
+        $('.gl-item').addClass('grid');
+    }
+
+    function list(){
+        $('li').css('display', 'block');
+        $('.gl-item').removeClass('grid');
+
+
+    }
+    var eventHandler = function(event){
+        if (event.target.dataset.funcId !== undefined){
+            functions[event.target.dataset.funcId](event);
+        }
+        event.stopPropagation();
+        event.preventDefault();
+
+    }
+    document.body.addEventListener('click', eventHandler, false);
+    document.body.addEventListener('submit', eventHandler, false);
 
     function removeButton(event) {
         var fatherId = event.target.dataset.fatherId;
         ulItems.removeChild(document.getElementById(fatherId));
+    }
 
+    function editButton(event) {
+
+    }
+
+    function makeRequest(event){
+        var element = event.target;
+        var input;
+        while(element.className != 'header-form')
+            element = event.target.parentNode;
+        input = element.children[0];
+//        console.log(input.value);
+        if (!input.value)
+            return;
+        var xhr = new XMLHttpRequest();
+        xhr.open('get', 'http://localhost:3001/search/'+input.value, true);
+        xhr.onload = loadHandler;
+        xhr.send();
+    }
+
+    function unique(arrOfObjects, key){
+        var o = {};
+        arrOfObjects.forEach(function(obj){
+            o[obj[key]] = obj;
+        });
+        return Object.keys(o).map(function(k){
+            return o[k];
+        })
+    }
+
+
+
+
+    function exposeImages(length) {
+        for (var i = startIndex; i < length; i++) {
+            var currentObj = cardsArr[i];
+            console.log(currentObj);
+            gl.appendGalleryItem(currentObj['imgUrl'], currentObj['name'], currentObj['name']);
+
+
+        }
+        startIndex = length;
+        var countElement = document.getElementById('count');
+        countElement.textContent = 'Items: ' + startIndex + '/' + cardsArr.length;
+    }
+
+    function loadHandler(){
+        console.log(this.responseText);
+        try {
+            ulItems.innerHTML='';
+            var prop;
+            var photosObj = JSON.parse(this.responseText);
+            cardsArr = unique(photosObj, 'imageName');
+            var length = Math.min(20, cardsArr.length);
+            startIndex = 0;
+            exposeImages(length, 0);
+        }
+        catch(e){
+            alert(e);
+        }
+    }
+
+
+    function showMore(){
+        var length = Math.min(startIndex+20, cardsArr.length);
+        exposeImages(length);
+    }
+
+    window.addEventListener('scroll', onScroll);
+
+    function onScroll() {
+        var body = document.body,
+            html = document.documentElement;
+
+        var height = Math.max( body.scrollHeight, body.offsetHeight,
+            html.clientHeight, html.scrollHeight, html.offsetHeight );
+
+        if (height <= document.body.scrollTop + window.innerHeight) {
+            showMore();
+        }
     }
 
     return Gallery;
 }
-var gl = new Gallery();
-gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'a', 'Image');
-gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'b', 'Image');
-gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'c', 'Image');
-gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'd', 'Image');
-gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'e', 'Image');
-gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
-gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
-gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
-gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
-gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
-gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
-gl.appendGalleryItem('http://dummyimage.com/200X142/822c00/fff.png', 'f', 'Image');
-
-////<li>
-////    <div class="gl-item">
-//        <div class="gl-item-header">
-//                            {{Title}}
-//        </div>
-//        <div class="gl-item-content">
-//            <img class="gallery-images" src="http://dummyimage.com/200X142/822c00/fff.png" alt="dolphin"/>
-//        </div>
-//        <div class="gl-item-footer">
-//            <button class="gl-item-footer-btn" type="button">Remove</button>
-//            <button class="gl-item-footer-btn" type="button">Edit</button>
-//        </div>
-//    </div>
-//</li>
+var gl = new App();

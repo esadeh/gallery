@@ -4,22 +4,25 @@
         <title>My Gallery</title>
         <meta charset="utf-8">
         <link rel="stylesheet" href="style.css">
-    </head>
+        <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>    </head>
 
-    <body>
+    <body >
         <header class="header">
-            <span>Gallery</span>
-            <span>Items: {{count}}/{{total}}</span>
-            <span>Selected:{{src}}</span>
+            <span class="header-title">Magic Gallery</span>
+            <span id="count">Items: 0/0</span>
             <span>
-                <form class="header-form">
-                    <input type="text" name="search">
-                    <button>search</button>
+                <form class="header-form" data-func-id="search">
+                    <input class="button" placeholder="Enter card name" type="text"  name="search">
+                    <button class="button" type=button data-func-id="search">search</button>
                 </form>
             </span>
             <span>
-                <button></button>
-                <button></button>
+                <button class="button">
+                    <img  data-func-id="grid" src="/thumb-icon.png" alt="dolphin"/>
+                </button>
+                <button class="button" data-func-id="lines">
+                    <img  data-func-id="lines" src="/list-icon.png" alt="dolphin"/>
+                </button>
             </span>
         </header>
 
@@ -29,8 +32,8 @@
             </ul>
         </div>
 
-        <footer>Gallery Footer</footer>
-
+        <footer>Created by Eyal Sadeh 2014</footer>
+        <script type="text/javascript" src="src/JQuery.js"></script>
         <script type="text/javascript" src="main.js"></script>
     </body>
 

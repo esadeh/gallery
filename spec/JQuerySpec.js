@@ -3,8 +3,10 @@
  */
 describe("JDom", function() {
     beforeEach(function () {
-        document.body.innerHTML = '<div>Test</div><div>Test2</div><button></button>';
+        var innerHtml = '<div>Test<ul></ul></div><div>Test2</div><button></button>';
+        document.body.innerHTML = innerHtml;
     });
+
 
     it("should generate collection with 2 items", function () {
         var collection = $('div');
@@ -19,9 +21,9 @@ describe("JDom", function() {
 
     it("should add class test and remove it", function () {
         var collection = $('div');
-        expect(collection.addClass('test').nodes[0].hasClass('test')).toBeTruthy();
-        expect(collection.addClass('test2').nodes[0].hasClass('test3')).toBeFalsy();
-
+        expect(collection.addClass('test').nodes[0].hasClass('test')).toBe(true);
+        expect(collection.addClass('test2').nodes[0].hasClass('test3')).toBe(false);
+        expect(collection.nodes[0].hasClass('test')).toBe(true);
     });
 
 
@@ -39,9 +41,11 @@ describe("JDom", function() {
         expect(collection.nodes[0].element.getAttribute('key')).toEqual('5');
         expect(collection.nodes[1].element.getAttribute('key')).toEqual('5');
 
+        expect(collection.hasAttr('key')).toBeTruthy();
         expect(collection.nodes[0].hasAttr('key')).toBeTruthy();
         expect(collection.nodes[1].hasAttr('key')).toBeTruthy();
         collection = collection.removeAttr('key');
+        expect(collection.hasAttr('key')).toBeFalsy();
         expect(collection.nodes[0].hasAttr('key')).toBeFalsy();
         expect(collection.nodes[1].hasAttr('key')).toBeFalsy();
     });
@@ -59,7 +63,6 @@ describe("JDom", function() {
         expect(collection2.hasClass('aaa')).toBeFalsy();
 
     });
-
 //    it("should create eventlistener and remove it", function () {
 //        var collection = $('div');
 //        var collection2 = collection.clone();
@@ -72,11 +75,12 @@ describe("JDom", function() {
     it("should set and return inner html", function () {
         var collection = $('div');
         expect(collection.html()).toEqual(collection.nodes[0].element.innerHTML);
+
+
         var html = '<button></button>';
         collection.html(html);
 
         expect(collection.html(html).html()).toEqual(html);
-
     });
 
     it("should set and return content when using function text", function () {
@@ -96,7 +100,147 @@ describe("JDom", function() {
 
 
 
+    it("should empty all the collection content", function () {
+        var collection = $('div');
+        collection.empty();
+        var ulCollection = $('ul');
+        expect(ulCollection.size()).toEqual(0);
+    });
+
+
+    it("should create new collection with element that have the given index", function () {
+        var collection = $('div');
+        collection = collection.eq(1);
+        expect(collection.size()).toEqual(1);
+        expect(collection.text()).toEqual('Test2');
+    });
+
+//    it("should appendTo", function () {
+//        var collection = $('div');
+//    });
+
+    it("should append given html", function () {
+        var collection = $('div');
+        collection.append('<p>hello</p>');
+        var newInnerHtml = '<div>Test<ul></ul><p>hello</p></div><div>Test2<p>hello</p></div><button></button>';
+        expect(document.body.innerHTML).toEqual(newInnerHtml);
+
+    });
+
+    it("should append clone of given element to every element in the collection", function () {
+        var collection = $('div');
+        var p = document.createElement('p');
+        p.textContent='hello';
+        collection.append(p);
+        var newInnerHtml = '<div>Test<ul></ul><p>hello</p></div><div>Test2<p>hello</p></div><button></button>';
+        expect(document.body.innerHTML).toEqual(newInnerHtml);
+    });
+
+    it("should place given html text before every element in the collection", function () {
+        var collection = $('div');
+        collection.before('<p>before</p>');
+        var newInnerHtml = '<p>before</p><div>Test<ul></ul></div><p>before</p><div>Test2</div><button></button>';
+        expect(document.body.innerHTML).toEqual(newInnerHtml);
+    });
+
+    it("should place clone of given element before every element in the collection", function () {
+        var collection = $('div');
+        var p = document.createElement('p');
+        p.textContent='hello';
+        collection.before(p);
+        var newInnerHtml = '<p>hello</p><div>Test<ul></ul></div><p>hello</p><div>Test2</div><button></button>';
+        expect(document.body.innerHTML).toEqual(newInnerHtml);
+    });
+
+
+    it("should place given html text after every element in the collection", function () {
+        var collection = $('div');
+        collection.after('<p>after</p>');
+        var newInnerHtml = '<div>Test<ul></ul></div><p>after</p><div>Test2</div><p>after</p><button></button>';
+        expect(document.body.innerHTML).toEqual(newInnerHtml);
+    });
+
+    it("should place clone of given element after every element in the collection", function () {
+        var collection = $('div');
+        var p = document.createElement('p');
+        p.textContent='hello';
+        collection.after(p);
+        var newInnerHtml = '<div>Test<ul></ul></div><p>hello</p><div>Test2</div><p>hello</p><button></button>';
+        expect(document.body.innerHTML).toEqual(newInnerHtml);
+    });
+
+    it("should get new collection with the children of the original collection", function () {
+        var innerHtml = '<div>Test<ul>Im ul</ul></div><div>Test2</div><button></button>';
+        document.body.innerHTML = innerHtml;
+
+        var collection = $('div');
+        var childrenCollection = collection.children();
+        var html = childrenCollection.html();
+        expect(html).toEqual('Im ul');
+
+        expect(childrenCollection.size()).toEqual(1);
+    });
+
+
+    xit("should get new collection with the siblings of the original collection", function () {
+        var innerHtml = '<div>Test<ul>Im ul</ul><li>Im li</li></div><div>Test2</div><button></button>';
+        document.body.innerHTML = innerHtml;
+
+        var collection = $('ul');
+        var childrenCollection = collection.siblings();
+        var html = childrenCollection.html();
+        expect(html).toEqual('Im li');
+
+        expect(childrenCollection.size()).toEqual(1);
+    });
+
+    it("should get new collection with next siblings of the original collection", function () {
+        var innerHtml = '<div>Test<ul>Im ul</ul><li>Im li</li></div><div>Test2</div><button></button><div>Test2</div>';
+        document.body.innerHTML = innerHtml;
+
+        var collection = $('div');
+        var childrenCollection = collection.next();
+
+        expect(childrenCollection.size()).toEqual(2);
+    });
+
+    it("should get new collection with next siblings of the original collection", function () {
+        var innerHtml = '<div>Test<ul>Im ul</ul><li>Im li</li></div><div>Test2</div><button></button><div>Test2</div>';
+        document.body.innerHTML = innerHtml;
+
+        var collection = $('div');
+        var childrenCollection = collection.next();
+
+        expect(childrenCollection.size()).toEqual(2);
+    });
+
+
+    it("should get new collection with previous siblings of the original collection", function () {
+        var innerHtml = '<div>Test<ul>Im ul</ul><li>Im li</li></div><div>Test2</div><button></button><div>Test2</div>';
+        document.body.innerHTML = innerHtml;
+
+        var collection = $('div');
+        var childrenCollection = collection.prev();
+
+        expect(childrenCollection.size()).toEqual(2);
+    });
+
+
+//    xit("should get new collection with all next siblings of the original collection", function () {
+//        var innerHtml = '<div>Test<ul>Im ul</ul><li>Im li</li></div><div>Test2</div><button></button>';
+//        document.body.innerHTML = innerHtml;
+//
+//        var collection = $('ul');
+//        var childrenCollection = collection.siblings();
+//        var html = childrenCollection.html();
+//        expect(html).toEqual('Im li');
+//
+//        expect(childrenCollection.size()).toEqual(1);
+//    });
+
+
+
+
+
 });
-
-
 
